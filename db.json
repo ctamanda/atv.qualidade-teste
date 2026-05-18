@@ -1,0 +1,40 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "email": "teste@cypress.com",
+      "password": "senha123",
+      "name": "Usuário Cypress"
+    },
+    {
+      "id": "2",
+      "email": "ronaldinho@email.com",
+      "password": "123456",
+      "name": "Ronaldo"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "1",
+      "title": "Aprender conceitos de teste",
+      "description": "Estudar a teoria por trás de testes de software, unitários, e2e e integração.",
+      "status": "completed",
+      "userId": 1
+    },
+    {
+      "id": "2",
+      "title": "Seminário de usabilidade",
+      "description": "fazer seminário sobre usabilidade, até dia 01",
+      "status": "pending",
+      "userId": 1
+    },
+    {
+      "id": "3",
+      "title": "Fazer atividade de estatística",
+      "description": "Questões no documento",
+      "status": "pending",
+      "userId": 1
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
