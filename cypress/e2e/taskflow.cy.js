@@ -1,8 +1,16 @@
 describe('TaskFlow - E2E', () => {
   const user = {
-    email: 'teste@gmail.com',
-    password: '123456',
+    email: 'teste1@gmail.com',
+    password: '12344321',
   };
+
+  it('Login', () => {
+    cy.visit('/login');
+    cy.get('[data-cy="email-input"]').type(user.email);
+    cy.get('[data-cy="password-input"]').type(user.password);
+    cy.get('[data-cy="login-submit"]').click();
+    cy.url().should('include', '/dashboard');
+  });
 
   beforeEach(() => {
     // login antes de cada teste
