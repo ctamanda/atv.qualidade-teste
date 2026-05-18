@@ -1,22 +1,8 @@
 describe('TaskFlow - E2E', () => {
   const user = {
-    name: 'Amanda Teste',
-    email: `amanda_${Date.now()}@email.com`,
+    email: 'teste@gmail.com',
     password: '123456',
   };
-
-  before(() => {
-    // cadastrar usuário (tela /register)
-    cy.visit('/register');
-    cy.get('[data-cy="name-input"]').type(user.name);
-    cy.get('[data-cy="email-input"]').type(user.email);
-    cy.get('[data-cy="password-input"]').type(user.password);
-    cy.get('[data-cy="register-submit"]').click();
-
-    // garante que entrou no dashboard
-    cy.url().should('include', '/dashboard');
-    cy.get('[data-cy="logout-btn"]').click();
-  });
 
   beforeEach(() => {
     // login antes de cada teste
