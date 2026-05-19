@@ -40,6 +40,90 @@
       "description": "Questões no documento",
       "status": "pending",
       "userId": 1
+    },
+    {
+      "title": "Tarefa Cypress",
+      "description": "Descrição da tarefa Cypress",
+      "status": "pending",
+      "userId": "1",
+      "id": "hulD-3g4t80"
+    },
+    {
+      "title": "Tarefa Pendente",
+      "description": "",
+      "status": "pending",
+      "userId": "1",
+      "id": "7jPVDTyq7Xk"
+    },
+    {
+      "title": "Tarefa Concluída",
+      "description": "",
+      "status": "completed",
+      "userId": "1",
+      "id": "BDyQuHZBtyI"
+    },
+    {
+      "title": "Tarefa Cypress",
+      "description": "Descrição da tarefa Cypress",
+      "status": "pending",
+      "userId": "1",
+      "id": "tkZbRkXW1Vw"
+    },
+    {
+      "title": "Tarefa Pendente",
+      "description": "",
+      "status": "pending",
+      "userId": "1",
+      "id": "oscg6Vi5a5o"
+    },
+    {
+      "title": "Tarefa Concluída",
+      "description": "",
+      "status": "completed",
+      "userId": "1",
+      "id": "bB1Uq9Vgq7U"
+    },
+    {
+      "title": "Tarefa Cypress",
+      "description": "Descrição da tarefa Cypress",
+      "status": "pending",
+      "userId": "1",
+      "id": "TZX4OI-fTUc"
+    },
+    {
+      "title": "Tarefa Pendente",
+      "description": "",
+      "status": "pending",
+      "userId": "1",
+      "id": "E6fTIeebkX4"
+    },
+    {
+      "title": "Tarefa Concluída",
+      "description": "",
+      "status": "completed",
+      "userId": "1",
+      "id": "XqEbVpS3b08"
+    },
+    {
+      "title": "Tarefa Cypress",
+      "description": "Descrição da tarefa Cypress",
+      "status": "pending",
+      "userId": "1",
+      "id": "6IlnWVRn5OU"
+    },
+    {
+      "title": "Tarefa Pendente",
+      "description": "",
+      "status": "pending",
+      "userId": "1",
+      "id": "YfFtYLR5ZRM"
+    },
+    {
+      "title": "Tarefa Concluída",
+      "description": "",
+      "status": "completed",
+      "userId": "1",
+      "id": "YBtRfNj3foM"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

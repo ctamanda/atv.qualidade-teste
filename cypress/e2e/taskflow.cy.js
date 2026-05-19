@@ -1,85 +1,103 @@
 describe('TaskFlow - E2E', () => {
   const user = {
-    email: 'teste1@gmail.com',
-    password: '12344321',
+    email: 'teste@cypress.com',
+    password: 'senha123',
   };
 
-  it('Login', () => {
-    cy.visit('/login');
-    cy.get('[data-cy="email-input"]').type(user.email);
-    cy.get('[data-cy="password-input"]').type(user.password);
-    cy.get('[data-cy="login-submit"]').click();
-    cy.url().should('include', '/dashboard');
+  describe('Autenticação', () => {
+    it('Login', () => {
+      cy.visit('/login');
+      cy.get('[data-cy="email-input"]').type(user.email);
+      cy.get('[data-cy="password-input"]').type(user.password);
+      cy.get('[data-cy="login-submit"]').click();
+      cy.url().should('include', '/dashboard');
+    });
   });
 
-  beforeEach(() => {
-    // login antes de cada teste
-    cy.visit('/login');
-    cy.get('[data-cy="email-input"]').type(user.email);
-    cy.get('[data-cy="password-input"]').type(user.password);
-    cy.get('[data-cy="login-submit"]').click();
-    cy.url().should('include', '/dashboard');
-  });
+  describe('Tarefas', () => {
+    beforeEach(() => {
+      cy.clearLocalStorage();
+      cy.visit('/login');
+      cy.get('[data-cy="email-input"]').type(user.email);
+      cy.get('[data-cy="password-input"]').type(user.password);
+      cy.get('[data-cy="login-submit"]').click();
+      cy.url().should('include', '/dashboard');
+    });
 
-  it('Criar tarefa', () => {
-    cy.get('[data-cy="new-task-title"]').type('Tarefa Cypress');
-    cy.get('[data-cy="new-task-desc"]').type('Descrição da tarefa Cypress');
-    cy.get('[data-cy="new-task-submit"]').click();
+    it('Criar tarefa', () => {
+      cy.intercept('POST', '**/tasks').as('createTask');
 
-    cy.contains('[data-cy="task-title-text"]', 'Tarefa Cypress').should('exist');
-  });
+      cy.get('[data-cy="new-task-title"]').type('Tarefa Cypress');
+      cy.get('[data-cy="new-task-desc"]').type('Descrição da tarefa Cypress');
+      cy.get('[data-cy="new-task-submit"]').click();
+      cy.wait('@createTask');
 
-  it('Editar tarefa', () => {
-    cy.contains('[data-cy="task-title-text"]', 'Tarefa Cypress')
-      .parents('[data-cy^="task-item-"]')
-      .within(() => {
-        cy.get('[data-cy="task-edit-btn"]').click();
-      });
+      cy.contains('[data-cy="task-title-text"]', 'Tarefa Cypress').should('exist');
+    });
 
-    cy.get('[data-cy="task-edit-title"]').clear().type('Tarefa Cypress Editada');
-    cy.get('[data-cy="task-save-btn"]').click();
+    it('Editar tarefa', () => {
+      cy.intercept('PATCH', '**/tasks/**').as('updateTask');
 
-    cy.contains('[data-cy="task-title-text"]', 'Tarefa Cypress Editada').should('exist');
-  });
+      cy.contains('[data-cy="task-title-text"]', 'Tarefa Cypress')
+        .parents('[data-cy^="task-item-"]')
+        .within(() => {
+          cy.get('[data-cy="task-edit-btn"]').click();
+        });
 
-  it('Excluir tarefa', () => {
-    cy.contains('[data-cy="task-title-text"]', 'Tarefa Cypress Editada')
-      .parents('[data-cy^="task-item-"]')
-      .within(() => {
-        cy.get('[data-cy="task-delete-btn"]').click();
-      });
+      cy.get('[data-cy="task-edit-title"]')
+        .clear()
+        .type('Tarefa Cypress Editada')
+        .should('have.value', 'Tarefa Cypress Editada');
 
-    cy.contains('[data-cy="task-title-text"]', 'Tarefa Cypress Editada').should('not.exist');
-  });
+      cy.get('[data-cy="task-save-btn"]').click();
+      cy.wait('@updateTask');
 
-  it('Filtrar tarefas pendentes e concluídas', () => {
-    // cria tarefa pendente
-    cy.get('[data-cy="new-task-title"]').type('Tarefa Pendente');
-    cy.get('[data-cy="new-task-submit"]').click();
+      cy.contains('[data-cy="task-title-text"]', 'Tarefa Cypress Editada').should('exist');
+    });
 
-    // cria tarefa concluída
-    cy.get('[data-cy="new-task-title"]').type('Tarefa Concluída');
-    cy.get('[data-cy="new-task-submit"]').click();
+    it('Excluir tarefa', () => {
+      cy.intercept('DELETE', '**/tasks/**').as('deleteTask');
 
-    cy.contains('[data-cy="task-title-text"]', 'Tarefa Concluída')
-      .parents('[data-cy^="task-item-"]')
-      .within(() => {
-        cy.get('[data-cy="task-checkbox"]').check({ force: true });
-      });
+      cy.contains('[data-cy="task-title-text"]', 'Tarefa Cypress Editada')
+        .parents('[data-cy^="task-item-"]')
+        .within(() => {
+          cy.get('[data-cy="task-delete-btn"]').click();
+        });
 
-    // filtro pendentes
-    cy.get('[data-cy="filter-pending"]').click();
-    cy.contains('Tarefa Pendente').should('exist');
-    cy.contains('Tarefa Concluída').should('not.exist');
+      cy.wait('@deleteTask');
+      cy.contains('[data-cy="task-title-text"]', 'Tarefa Cypress Editada').should('not.exist');
+    });
 
-    // filtro concluídas
-    cy.get('[data-cy="filter-completed"]').click();
-    cy.contains('Tarefa Concluída').should('exist');
-    cy.contains('Tarefa Pendente').should('not.exist');
+    it('Filtrar tarefas pendentes e concluídas', () => {
+      cy.intercept('POST', '**/tasks').as('createTask');
+      cy.intercept('PATCH', '**/tasks/**').as('updateTask');
 
-    // todas
-    cy.get('[data-cy="filter-all"]').click();
-    cy.contains('Tarefa Pendente').should('exist');
-    cy.contains('Tarefa Concluída').should('exist');
+      cy.get('[data-cy="new-task-title"]').type('Tarefa Pendente');
+      cy.get('[data-cy="new-task-submit"]').click();
+      cy.wait('@createTask');
+
+      cy.get('[data-cy="new-task-title"]').type('Tarefa Concluída');
+      cy.get('[data-cy="new-task-submit"]').click();
+      cy.wait('@createTask');
+
+      cy.contains('[data-cy="task-title-text"]', 'Tarefa Concluída')
+        .parents('[data-cy^="task-item-"]')
+        .within(() => {
+          cy.get('[data-cy="task-checkbox"]').check({ force: true });
+        });
+      cy.wait('@updateTask');
+
+      cy.get('[data-cy="filter-pending"]').click();
+      cy.contains('Tarefa Pendente').should('exist');
+      cy.contains('Tarefa Concluída').should('not.exist');
+
+      cy.get('[data-cy="filter-completed"]').click();
+      cy.contains('Tarefa Concluída').should('exist');
+      cy.contains('Tarefa Pendente').should('not.exist');
+
+      cy.get('[data-cy="filter-all"]').click();
+      cy.contains('Tarefa Pendente').should('exist');
+      cy.contains('Tarefa Concluída').should('exist');
+    });
   });
 });

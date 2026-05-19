@@ -9,7 +9,9 @@
     "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "cy:open": "start-server-and-test dev http://localhost:5173 \"cypress open\"",
+    "cy:run": "start-server-and-test dev http://localhost:5173 \"cypress run\""
   },
   "dependencies": {
     "react": "^19.2.6",
@@ -22,11 +24,13 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
     "concurrently": "^9.2.1",
+    "cypress": "^15.15.0",
     "eslint": "^10.3.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.6.0",
     "json-server": "^1.0.0-beta.15",
+    "start-server-and-test": "^3.0.5",
     "vite": "^8.0.12"
   }
 }
