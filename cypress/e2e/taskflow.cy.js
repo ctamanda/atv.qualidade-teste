@@ -5,12 +5,21 @@ describe('TaskFlow - E2E', () => {
   };
 
   describe('Autenticação', () => {
-    it('Login', () => {
+    it('Login com credenciais válidas', () => {
       cy.visit('/login');
       cy.get('[data-cy="email-input"]').type(user.email);
       cy.get('[data-cy="password-input"]').type(user.password);
       cy.get('[data-cy="login-submit"]').click();
       cy.url().should('include', '/dashboard');
+    });
+
+    it('Login com credenciais inválidas', () => {
+      cy.visit('/login');
+      cy.get('[data-cy="email-input"]').type('usuario@invalido.com');
+      cy.get('[data-cy="password-input"]').type('senhaerrada');
+      cy.get('[data-cy="login-submit"]').click();
+      cy.get('[data-cy="login-error"]').should('be.visible');
+      cy.url().should('not.include', '/dashboard');
     });
   });
 
