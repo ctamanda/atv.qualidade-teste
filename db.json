@@ -124,6 +124,27 @@
       "status": "completed",
       "userId": "1",
       "id": "YBtRfNj3foM"
+    },
+    {
+      "title": "Tarefa Cypress",
+      "description": "Descrição da tarefa Cypress",
+      "status": "pending",
+      "userId": "1",
+      "id": "l_M8moZY3Fw"
+    },
+    {
+      "title": "Tarefa Pendente",
+      "description": "",
+      "status": "pending",
+      "userId": "1",
+      "id": "hE6vYVK7HRY"
+    },
+    {
+      "title": "Tarefa Concluída",
+      "description": "",
+      "status": "completed",
+      "userId": "1",
+      "id": "zs-0ktfZgew"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

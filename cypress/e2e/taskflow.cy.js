@@ -26,6 +26,7 @@ describe('TaskFlow - E2E', () => {
 
     it('Criar tarefa', () => {
       cy.intercept('POST', '**/tasks').as('createTask');
+      cy.intercept('DELETE', '**/tasks/**').as('deleteTask');
 
       cy.get('[data-cy="new-task-title"]').type('Tarefa Cypress');
       cy.get('[data-cy="new-task-desc"]').type('Descrição da tarefa Cypress');
@@ -33,12 +34,25 @@ describe('TaskFlow - E2E', () => {
       cy.wait('@createTask');
 
       cy.contains('[data-cy="task-title-text"]', 'Tarefa Cypress').should('exist');
+
+      cy.contains('[data-cy="task-title-text"]', 'Tarefa Cypress')
+        .parents('[data-cy^="task-item-"]')
+        .within(() => {
+          cy.get('[data-cy="task-delete-btn"]').click();
+        });
+      cy.wait('@deleteTask');
     });
 
     it('Editar tarefa', () => {
+      cy.intercept('POST', '**/tasks').as('createTask');
       cy.intercept('PATCH', '**/tasks/**').as('updateTask');
+      cy.intercept('DELETE', '**/tasks/**').as('deleteTask');
 
-      cy.contains('[data-cy="task-title-text"]', 'Tarefa Cypress')
+      cy.get('[data-cy="new-task-title"]').type('Tarefa Para Editar');
+      cy.get('[data-cy="new-task-submit"]').click();
+      cy.wait('@createTask');
+
+      cy.contains('[data-cy="task-title-text"]', 'Tarefa Para Editar')
         .parents('[data-cy^="task-item-"]')
         .within(() => {
           cy.get('[data-cy="task-edit-btn"]').click();
@@ -46,41 +60,54 @@ describe('TaskFlow - E2E', () => {
 
       cy.get('[data-cy="task-edit-title"]')
         .clear()
-        .type('Tarefa Cypress Editada')
-        .should('have.value', 'Tarefa Cypress Editada');
+        .type('Tarefa Editada')
+        .should('have.value', 'Tarefa Editada');
 
       cy.get('[data-cy="task-save-btn"]').click();
       cy.wait('@updateTask');
 
-      cy.contains('[data-cy="task-title-text"]', 'Tarefa Cypress Editada').should('exist');
+      cy.contains('[data-cy="task-title-text"]', 'Tarefa Editada').should('exist');
+
+      cy.contains('[data-cy="task-title-text"]', 'Tarefa Editada')
+        .parents('[data-cy^="task-item-"]')
+        .within(() => {
+          cy.get('[data-cy="task-delete-btn"]').click();
+        });
+      cy.wait('@deleteTask');
     });
 
     it('Excluir tarefa', () => {
+      cy.intercept('POST', '**/tasks').as('createTask');
       cy.intercept('DELETE', '**/tasks/**').as('deleteTask');
 
-      cy.contains('[data-cy="task-title-text"]', 'Tarefa Cypress Editada')
+      cy.get('[data-cy="new-task-title"]').type('Tarefa Para Excluir');
+      cy.get('[data-cy="new-task-submit"]').click();
+      cy.wait('@createTask');
+
+      cy.contains('[data-cy="task-title-text"]', 'Tarefa Para Excluir')
         .parents('[data-cy^="task-item-"]')
         .within(() => {
           cy.get('[data-cy="task-delete-btn"]').click();
         });
 
       cy.wait('@deleteTask');
-      cy.contains('[data-cy="task-title-text"]', 'Tarefa Cypress Editada').should('not.exist');
+      cy.contains('[data-cy="task-title-text"]', 'Tarefa Para Excluir').should('not.exist');
     });
 
     it('Filtrar tarefas pendentes e concluídas', () => {
       cy.intercept('POST', '**/tasks').as('createTask');
       cy.intercept('PATCH', '**/tasks/**').as('updateTask');
+      cy.intercept('DELETE', '**/tasks/**').as('deleteTask');
 
-      cy.get('[data-cy="new-task-title"]').type('Tarefa Pendente');
+      cy.get('[data-cy="new-task-title"]').type('Tarefa Pendente Cypress');
       cy.get('[data-cy="new-task-submit"]').click();
       cy.wait('@createTask');
 
-      cy.get('[data-cy="new-task-title"]').type('Tarefa Concluída');
+      cy.get('[data-cy="new-task-title"]').type('Tarefa Concluída Cypress');
       cy.get('[data-cy="new-task-submit"]').click();
       cy.wait('@createTask');
 
-      cy.contains('[data-cy="task-title-text"]', 'Tarefa Concluída')
+      cy.contains('[data-cy="task-title-text"]', 'Tarefa Concluída Cypress')
         .parents('[data-cy^="task-item-"]')
         .within(() => {
           cy.get('[data-cy="task-checkbox"]').check({ force: true });
@@ -88,16 +115,30 @@ describe('TaskFlow - E2E', () => {
       cy.wait('@updateTask');
 
       cy.get('[data-cy="filter-pending"]').click();
-      cy.contains('Tarefa Pendente').should('exist');
-      cy.contains('Tarefa Concluída').should('not.exist');
+      cy.contains('Tarefa Pendente Cypress').should('exist');
+      cy.contains('Tarefa Concluída Cypress').should('not.exist');
 
       cy.get('[data-cy="filter-completed"]').click();
-      cy.contains('Tarefa Concluída').should('exist');
-      cy.contains('Tarefa Pendente').should('not.exist');
+      cy.contains('Tarefa Concluída Cypress').should('exist');
+      cy.contains('Tarefa Pendente Cypress').should('not.exist');
 
       cy.get('[data-cy="filter-all"]').click();
-      cy.contains('Tarefa Pendente').should('exist');
-      cy.contains('Tarefa Concluída').should('exist');
+      cy.contains('Tarefa Pendente Cypress').should('exist');
+      cy.contains('Tarefa Concluída Cypress').should('exist');
+
+      cy.contains('[data-cy="task-title-text"]', 'Tarefa Pendente Cypress')
+        .parents('[data-cy^="task-item-"]')
+        .within(() => {
+          cy.get('[data-cy="task-delete-btn"]').click();
+        });
+      cy.wait('@deleteTask');
+
+      cy.contains('[data-cy="task-title-text"]', 'Tarefa Concluída Cypress')
+        .parents('[data-cy^="task-item-"]')
+        .within(() => {
+          cy.get('[data-cy="task-delete-btn"]').click();
+        });
+      cy.wait('@deleteTask');
     });
   });
 });
